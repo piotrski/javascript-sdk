@@ -181,10 +181,18 @@ declare module '@optimizely/optimizely-sdk' {
   }
 
   // NotificationCenter-related types
+  class NotificationCenterPayloadsMap implements Record<`${enums.NOTIFICATION_TYPES}`, any> {
+    [enums.NOTIFICATION_TYPES.ACTIVATE]: ActivateListenerPayload;
+    [enums.NOTIFICATION_TYPES.TRACK]: TrackListenerPayload;
+    [enums.NOTIFICATION_TYPES.DECISION]: any;
+    [enums.NOTIFICATION_TYPES.LOG_EVENT]: any;
+    [enums.NOTIFICATION_TYPES.OPTIMIZELY_CONFIG_UPDATE]: any;
+  }
+  
   export interface NotificationCenter {
-    addNotificationListener<T extends ListenerPayload>(
-      notificationType: string,
-      callback: NotificationListener<T>
+    addNotificationListener<T extends keyof NotificationCenterPayloadsMap>(
+      notificationType: T,
+      callback: NotificationListener<NotificationCenterPayloadsMap[T]>
     ): number;
     removeNotificationListener(listenerId: number): boolean;
     clearAllNotificationListeners(): void;
